@@ -3,169 +3,82 @@
 
 import { useState } from "react";
 
-const tabs = [
-  "Home",
-  "AI Health Chat",
-  "Symptom Checker",
-  "Medicine Guide",
-  "Nutrition",
-  "Fitness",
-  "Mental Health",
-  "Sleep Guide",
-  "First Aid",
-  "Preventive Care",
-  "Women's Health",
-  "About",
-];
-
 const features = [
-  {
-    icon: "💬",
-    title: "AI Health Chat",
-    description: "Ask general health education questions.",
-  },
-  {
-    icon: "🩺",
-    title: "Symptom Checker",
-    description: "Explore information about common symptoms.",
-  },
-  {
-    icon: "💊",
-    title: "Medicine Guide",
-    description: "Learn about medicines and medication safety.",
-  },
-  {
-    icon: "🥗",
-    title: "Nutrition",
-    description: "Discover balanced diets and healthy eating.",
-  },
-  {
-    icon: "🏃",
-    title: "Fitness",
-    description: "Explore workouts and physical activities.",
-  },
-  {
-    icon: "🧠",
-    title: "Mental Health",
-    description: "Learn about stress and emotional wellbeing.",
-  },
-  {
-    icon: "😴",
-    title: "Sleep Guide",
-    description: "Build healthy sleeping habits.",
-  },
-  {
-    icon: "🩹",
-    title: "First Aid",
-    description: "Learn basic first-aid awareness.",
-  },
-  {
-    icon: "❤️",
-    title: "Preventive Care",
-    description: "Explore checkups and preventive health.",
-  },
-  {
-    icon: "🌸",
-    title: "Women's Health",
-    description: "Explore women's health education.",
-  },
+  ["💬", "AI Health Chat", "Ask general health questions."],
+  ["🩺", "Symptom Checker", "Explore common symptoms."],
+  ["💊", "Medicine Guide", "Learn about medicines."],
+  ["🥗", "Nutrition", "Healthy food and diet information."],
+  ["🏃", "Fitness", "Exercise and fitness guidance."],
+  ["🧠", "Mental Health", "Mental wellness and stress awareness."],
+  ["😴", "Sleep Guide", "Learn healthy sleeping habits."],
+  ["🩹", "First Aid", "Basic first-aid education."],
+  ["❤️", "Preventive Care", "Health checkup awareness."],
+  ["🌸", "Women's Health", "Women's health education."],
 ];
 
-const topics: Record<string, {
+const pages: Record<string, {
   icon: string;
   heading: string;
-  intro: string;
-  items: { title: string; description: string }[];
+  description: string;
+  items: string[];
 }> = {
+  "Medicine Guide": {
+    icon: "💊",
+    heading: "Medicine Information",
+    description: "Learn general information about medicines and medication safety.",
+    items: ["Paracetamol", "Ibuprofen", "Antibiotics", "Medicine Safety"],
+  },
   Nutrition: {
     icon: "🥗",
-    heading: "Nutrition & Healthy Eating",
-    intro: "Discover the importance of balanced nutrition.",
-    items: [
-      { title: "Healthy Diet", description: "Learn about fruits, vegetables, whole grains and balanced meals." },
-      { title: "Vitamins & Minerals", description: "Understand essential nutrients and their roles in the body." },
-      { title: "Hydration", description: "Learn why drinking enough water matters." },
-      { title: "Healthy Eating Habits", description: "Explore mindful eating and balanced food choices." },
-    ],
+    heading: "Nutrition & Healthy Diet",
+    description: "Discover the importance of balanced nutrition.",
+    items: ["Healthy Diet", "Vitamins & Minerals", "Hydration", "Healthy Eating Habits"],
   },
   Fitness: {
     icon: "🏃",
     heading: "Fitness & Exercise",
-    intro: "Explore physical activity and healthy movement.",
-    items: [
-      { title: "Walking", description: "Learn about the benefits of regular walking." },
-      { title: "Home Workouts", description: "Explore beginner-friendly movement and exercise ideas." },
-      { title: "Stretching", description: "Discover flexibility and gentle stretching exercises." },
-      { title: "Fitness Habits", description: "Learn how to build a consistent activity routine." },
-    ],
+    description: "Explore physical activity and healthy movement.",
+    items: ["Walking", "Home Workouts", "Stretching", "Daily Exercise"],
   },
   "Mental Health": {
     icon: "🧠",
     heading: "Mental Health & Wellness",
-    intro: "Your emotional wellbeing matters.",
-    items: [
-      { title: "Stress Management", description: "Explore healthy ways to manage everyday stress." },
-      { title: "Mindfulness", description: "Learn about breathing and mindfulness practices." },
-      { title: "Emotional Wellness", description: "Understand emotions and healthy coping strategies." },
-      { title: "Self Care", description: "Discover everyday habits that support wellbeing." },
-    ],
+    description: "Your emotional wellbeing matters.",
+    items: ["Stress Management", "Mindfulness", "Emotional Wellness", "Self Care"],
   },
   "Sleep Guide": {
     icon: "😴",
     heading: "Sleep & Recovery",
-    intro: "Learn about the importance of quality sleep.",
-    items: [
-      { title: "Sleep Hygiene", description: "Explore healthy habits for better sleep." },
-      { title: "Bedtime Routine", description: "Learn how to create a relaxing nighttime routine." },
-      { title: "Sleep Awareness", description: "Understand common sleep difficulties." },
-      { title: "Rest & Recovery", description: "Discover why your body needs rest." },
-    ],
+    description: "Learn about the importance of healthy sleep.",
+    items: ["Sleep Hygiene", "Bedtime Routine", "Sleep Awareness", "Rest & Recovery"],
   },
   "First Aid": {
     icon: "🩹",
     heading: "First Aid & Safety",
-    intro: "Learn basic first-aid awareness and emergency preparedness.",
-    items: [
-      { title: "Minor Cuts", description: "Learn basic wound-cleaning and bleeding awareness." },
-      { title: "Burn Awareness", description: "Understand immediate first-aid steps for burns." },
-      { title: "CPR Awareness", description: "Learn why CPR training and emergency response matter." },
-      { title: "Emergency Preparedness", description: "Understand how to prepare for medical emergencies." },
-    ],
+    description: "Learn basic first-aid awareness.",
+    items: ["Minor Cuts", "Burn Awareness", "CPR Awareness", "Emergency Preparedness"],
   },
   "Preventive Care": {
     icon: "❤️",
     heading: "Preventive Healthcare",
-    intro: "Learn how preventive healthcare supports wellbeing.",
-    items: [
-      { title: "Regular Checkups", description: "Understand the importance of routine health visits." },
-      { title: "Vaccination", description: "Explore vaccine awareness and prevention." },
-      { title: "Health Screening", description: "Learn about routine screening discussions with doctors." },
-      { title: "Healthy Habits", description: "Discover everyday habits that support long-term health." },
-    ],
+    description: "Explore preventive healthcare and wellness.",
+    items: ["Regular Checkups", "Vaccination", "Health Screening", "Healthy Habits"],
   },
   "Women's Health": {
     icon: "🌸",
-    heading: "Women's Health & Wellness",
-    intro: "Explore educational information about women's health.",
-    items: [
-      { title: "Menstrual Health", description: "Learn about menstrual cycles and period health." },
-      { title: "Reproductive Health", description: "Explore general reproductive health education." },
-      { title: "Hormonal Health", description: "Understand the role of hormones in the body." },
-      { title: "Women's Wellness", description: "Discover general health and self-care information." },
-    ],
-  },
-  "Medicine Guide": {
-    icon: "💊",
-    heading: "Medicine Information Guide",
-    intro: "Learn general information about common medicines.",
-    items: [
-      { title: "Paracetamol", description: "General information about a common pain and fever medicine." },
-      { title: "Ibuprofen", description: "Learn about this anti-inflammatory medicine and its precautions." },
-      { title: "Antibiotics", description: "Understand why antibiotics should only be used when prescribed." },
-      { title: "Medicine Safety", description: "Learn about medicine labels, interactions and safe storage." },
-    ],
+    heading: "Women's Health",
+    description: "Explore educational information about women's health.",
+    items: ["Menstrual Health", "Reproductive Health", "Hormonal Health", "Women's Wellness"],
   },
 };
+
+const tabs = [
+  "Home",
+  "AI Health Chat",
+  "Symptom Checker",
+  ...Object.keys(pages),
+  "About",
+];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("Home");
@@ -183,7 +96,7 @@ export default function Home() {
       { role: "You", text: question },
       {
         role: "HealthGuide AI",
-        text: "Thanks for your question! This website demo is not connected to a live AI medical service yet. I can provide general health education when a real AI service is connected. Please consult a qualified healthcare professional for personal medical advice.",
+        text: "Thank you for your question! This is a demo and is not connected to a live AI medical service. Please consult a qualified healthcare professional for personal medical advice.",
       },
     ]);
 
@@ -191,9 +104,13 @@ export default function Home() {
   }
 
   const styles = `
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
@@ -202,7 +119,7 @@ export default function Home() {
       min-height: 100vh;
       background:
         linear-gradient(
-          rgba(0, 25, 36, 0.72),
+          rgba(0, 25, 36, 0.70),
           rgba(0, 35, 49, 0.82)
         ),
         url("/healthcare-bg.jpg");
@@ -212,24 +129,28 @@ export default function Home() {
       background-attachment: fixed;
     }
 
-    button { cursor: pointer; font-family: inherit; }
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
 
     .navbar {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
       padding: 18px 5%;
-      background: rgba(0, 25, 38, 0.88);
+      background: rgba(0, 25, 38, 0.90);
       backdrop-filter: blur(15px);
-      border-bottom: 1px solid rgba(103,232,249,0.2);
+      border-bottom: 1px solid rgba(103,232,249,0.25);
       position: sticky;
       top: 0;
       z-index: 100;
-      gap: 15px;
     }
 
     .logo {
-      font-size: 24px;
+      font-size: 25px;
       font-weight: 800;
       color: #67e8f9;
       white-space: nowrap;
@@ -237,8 +158,8 @@ export default function Home() {
 
     .navlinks {
       display: flex;
-      gap: 5px;
       flex-wrap: wrap;
+      gap: 5px;
       justify-content: center;
     }
 
@@ -254,33 +175,53 @@ export default function Home() {
     .navlinks button:hover,
     .navlinks button.selected {
       color: #67e8f9;
-      background: rgba(34,211,238,0.16);
+      background: rgba(34,211,238,0.18);
     }
 
+    /* COVER PICTURE */
     .hero {
+      min-height: 560px;
+      padding: 110px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      padding: 105px 20px 90px;
+
+      background:
+        linear-gradient(
+          rgba(0, 25, 36, 0.48),
+          rgba(0, 25, 36, 0.68)
+        ),
+        url("/cover.jpg");
+
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+
+      border-radius: 0 0 25px 25px;
     }
 
     .tag {
       display: inline-block;
       padding: 11px 20px;
       border-radius: 30px;
-      background: rgba(34,211,238,0.15);
-      border: 1px solid rgba(103,232,249,0.4);
+      background: rgba(34,211,238,0.20);
+      border: 1px solid rgba(103,232,249,0.5);
       color: #a5f3fc;
       font-size: 14px;
     }
 
     h1 {
-      font-size: clamp(36px,6vw,64px);
+      font-size: clamp(38px, 6vw, 65px);
       line-height: 1.2;
       margin: 25px 0;
       color: white;
+      text-shadow: 0 3px 20px rgba(0,0,0,.5);
     }
 
     .hero p {
-      color: #d5edf5;
+      color: #e0f7ff;
       font-size: 18px;
       line-height: 1.8;
     }
@@ -303,7 +244,7 @@ export default function Home() {
     }
 
     .section {
-      padding: 60px 7%;
+      padding: 65px 7%;
       max-width: 1250px;
       margin: auto;
     }
@@ -323,16 +264,16 @@ export default function Home() {
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 22px;
     }
 
     .card {
-      background: rgba(3,35,49,0.83);
+      background: rgba(3,35,49,0.86);
       backdrop-filter: blur(14px);
-      border: 1px solid rgba(103,232,249,0.23);
-      padding: 25px;
-      border-radius: 17px;
+      border: 1px solid rgba(103,232,249,0.25);
+      padding: 27px;
+      border-radius: 18px;
       box-shadow: 0 8px 30px rgba(0,0,0,.2);
       transition: .25s;
     }
@@ -342,9 +283,13 @@ export default function Home() {
       border-color: #67e8f9;
     }
 
-    .emoji { font-size: 36px; }
+    .emoji {
+      font-size: 38px;
+    }
 
-    .card h3 { color: #67e8f9; }
+    .card h3 {
+      color: #67e8f9;
+    }
 
     .card p {
       color: #d0e2e9;
@@ -353,17 +298,19 @@ export default function Home() {
     }
 
     .panel {
-      max-width: 760px;
+      max-width: 850px;
       margin: 30px auto;
       padding: 30px;
-      background: rgba(3,35,49,0.88);
+      background: rgba(3,35,49,0.90);
       backdrop-filter: blur(15px);
       border: 1px solid rgba(103,232,249,.25);
       border-radius: 18px;
       box-shadow: 0 10px 35px rgba(0,0,0,.2);
     }
 
-    .panel h3 { color: #a5f3fc; }
+    .panel h3 {
+      color: #a5f3fc;
+    }
 
     input, textarea {
       width: 100%;
@@ -380,10 +327,14 @@ export default function Home() {
       padding: 14px;
       margin: 12px 0;
       background: rgba(34,211,238,.12);
-      border: 1px solid rgba(103,232,249,.18);
+      border: 1px solid rgba(103,232,249,.2);
       border-radius: 10px;
       line-height: 1.7;
-      color: #effcff;
+    }
+
+    .topic-icon {
+      text-align: center;
+      font-size: 55px;
     }
 
     .disclaimer {
@@ -397,32 +348,43 @@ export default function Home() {
       margin-top: 22px;
     }
 
-    .topic-icon {
-      text-align: center;
-      font-size: 55px;
-      margin-bottom: 15px;
-    }
-
     footer {
       text-align: center;
-      background: rgba(0,18,29,.92);
+      background: rgba(0,18,29,.94);
       border-top: 1px solid rgba(103,232,249,.2);
       color: #d1e7ed;
       padding: 40px 20px;
       line-height: 1.9;
     }
 
-    footer h2 { color: #67e8f9; }
+    footer h2 {
+      color: #67e8f9;
+    }
 
     @media(max-width:850px) {
-      .navbar { flex-direction: column; }
-      .navlinks { max-height: 115px; overflow-y: auto; }
+      .navbar {
+        flex-direction: column;
+      }
+
+      .navlinks {
+        max-height: 120px;
+        overflow-y: auto;
+      }
     }
 
     @media(max-width:600px) {
-      .hero { padding: 70px 18px; }
-      .panel { padding: 20px; }
-      .section { padding: 40px 5%; }
+      .hero {
+        min-height: 480px;
+        padding: 75px 18px;
+      }
+
+      .panel {
+        padding: 20px;
+      }
+
+      .section {
+        padding: 40px 5%;
+      }
     }
   `;
 
@@ -462,7 +424,7 @@ export default function Home() {
             <p>
               Explore health information, learn about symptoms
               <br />
-              and make more informed decisions.
+              and make informed decisions.
             </p>
 
             <button
@@ -482,19 +444,21 @@ export default function Home() {
 
           <section className="section">
             <h2>Explore HealthGuide</h2>
+
             <p className="subtitle">
               Everything you need to learn about health and wellness.
             </p>
 
             <div className="cards">
-              {features.map((feature) => (
-                <div className="card" key={feature.title}>
-                  <div className="emoji">{feature.icon}</div>
-                  <h3>{feature.title}</h3>
-                  <p>{feature.description}</p>
+              {features.map(([icon, title, description]) => (
+                <div className="card" key={title}>
+                  <div className="emoji">{icon}</div>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+
                   <button
                     className="primary"
-                    onClick={() => setActiveTab(feature.title)}
+                    onClick={() => setActiveTab(title)}
                   >
                     Explore →
                   </button>
@@ -566,7 +530,7 @@ export default function Home() {
               onClick={() =>
                 alert(
                   symptoms.trim()
-                    ? "This demo does not analyze or diagnose symptoms. Please discuss them with a healthcare professional."
+                    ? "This demonstration does not diagnose or analyze symptoms. Please consult a healthcare professional."
                     : "Please describe your symptoms first."
                 )
               }
@@ -576,37 +540,40 @@ export default function Home() {
 
             <div className="disclaimer">
               This tool does not diagnose diseases.
-              For severe or rapidly worsening symptoms, seek urgent medical care.
+              Seek urgent medical care for severe symptoms.
             </div>
           </div>
         </section>
       )}
 
-      {topics[activeTab] && (
+      {pages[activeTab] && (
         <section className="section">
           <div className="panel">
             <div className="topic-icon">
-              {topics[activeTab].icon}
+              {pages[activeTab].icon}
             </div>
 
-            <h2>{topics[activeTab].heading}</h2>
+            <h2>{pages[activeTab].heading}</h2>
 
             <p className="subtitle">
-              {topics[activeTab].intro}
+              {pages[activeTab].description}
             </p>
 
             <div className="cards">
-              {topics[activeTab].items.map((item) => (
-                <div className="card" key={item.title}>
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
+              {pages[activeTab].items.map((item) => (
+                <div className="card" key={item}>
+                  <h3>{item}</h3>
+                  <p>
+                    Learn general educational information
+                    about {item.toLowerCase()}.
+                  </p>
                 </div>
               ))}
             </div>
 
             <div className="disclaimer">
-              This content is for general educational purposes only.
-              It does not replace professional medical advice.
+              Educational information only. Always consult
+              a qualified healthcare professional for personal advice.
             </div>
           </div>
         </section>
@@ -617,18 +584,15 @@ export default function Home() {
           <div className="panel">
             <div className="topic-icon">💙</div>
             <h2>About HealthGuide AI</h2>
+
             <p className="subtitle">
               Understand Your Health. Make Informed Decisions.
             </p>
+
             <p>
               HealthGuide AI is an educational health platform
               designed to make general health information easier
               to understand and access.
-            </p>
-            <p>
-              Our goal is to encourage health awareness,
-              healthy habits and informed conversations
-              with healthcare professionals.
             </p>
           </div>
         </section>
