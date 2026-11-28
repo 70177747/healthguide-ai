@@ -5,464 +5,180 @@ import { useState } from "react";
 
 const features = [
   ["💬", "AI Health Chat", "Ask general health questions."],
-  ["🩺", "Symptom Checker", "Explore common symptoms."],
+  ["🩺", "Symptom Checker", "Understand common symptoms."],
   ["💊", "Medicine Guide", "Learn about medicines."],
-  ["🥗", "Nutrition", "Healthy food and diet information."],
+  ["🥗", "Nutrition", "Healthy food and diet tips."],
   ["🏃", "Fitness", "Exercise and fitness guidance."],
-  ["🧠", "Mental Health", "Mental wellness and stress awareness."],
-  ["😴", "Sleep Guide", "Learn healthy sleeping habits."],
-  ["🩹", "First Aid", "Basic first-aid education."],
-  ["❤️", "Preventive Care", "Health checkup awareness."],
-  ["🌸", "Women's Health", "Women's health education."],
+  ["🧠", "Mental Health", "Mental wellness and stress support."],
+  ["😴", "Sleep Guide", "Improve your sleep routine."],
+  ["🚑", "First Aid", "Basic first-aid information."],
+  ["🛡️", "Preventive Care", "Tips for staying healthy."],
 ];
 
-const pages: Record<string, {
-  icon: string;
-  heading: string;
-  description: string;
-  items: string[];
-}> = {
+const pages: Record<string, { title: string; description: string; tips: string[] }> = {
   "Medicine Guide": {
-    icon: "💊",
-    heading: "Medicine Information",
-    description: "Learn general information about medicines and medication safety.",
-    items: ["Paracetamol", "Ibuprofen", "Antibiotics", "Medicine Safety"],
+    title: "Medicine Guide",
+    description: "Learn general information about medicines and their safe use.",
+    tips: [
+      "Always follow your doctor's prescription.",
+      "Read the medicine label carefully.",
+      "Never take someone else's prescription medicine.",
+      "Ask a pharmacist about possible side effects.",
+    ],
   },
   Nutrition: {
-    icon: "🥗",
-    heading: "Nutrition & Healthy Diet",
-    description: "Discover the importance of balanced nutrition.",
-    items: ["Healthy Diet", "Vitamins & Minerals", "Hydration", "Healthy Eating Habits"],
+    title: "Nutrition Guide",
+    description: "Build healthy eating habits for a healthier lifestyle.",
+    tips: [
+      "Eat fruits and vegetables daily.",
+      "Drink enough water.",
+      "Include protein in your meals.",
+      "Limit excessive sugar and processed foods.",
+    ],
   },
   Fitness: {
-    icon: "🏃",
-    heading: "Fitness & Exercise",
-    description: "Explore physical activity and healthy movement.",
-    items: ["Walking", "Home Workouts", "Stretching", "Daily Exercise"],
+    title: "Fitness Guide",
+    description: "Stay active and make movement part of your daily routine.",
+    tips: [
+      "Try walking for 20–30 minutes.",
+      "Stretch before and after exercise.",
+      "Start slowly and increase activity gradually.",
+      "Give your body enough time to rest.",
+    ],
   },
   "Mental Health": {
-    icon: "🧠",
-    heading: "Mental Health & Wellness",
-    description: "Your emotional wellbeing matters.",
-    items: ["Stress Management", "Mindfulness", "Emotional Wellness", "Self Care"],
+    title: "Mental Health",
+    description: "Take care of your emotional and mental well-being.",
+    tips: [
+      "Take breaks when you feel overwhelmed.",
+      "Talk to someone you trust.",
+      "Practice relaxation and breathing exercises.",
+      "Seek professional support when needed.",
+    ],
   },
   "Sleep Guide": {
-    icon: "😴",
-    heading: "Sleep & Recovery",
-    description: "Learn about the importance of healthy sleep.",
-    items: ["Sleep Hygiene", "Bedtime Routine", "Sleep Awareness", "Rest & Recovery"],
+    title: "Sleep Guide",
+    description: "Create a healthy sleep routine.",
+    tips: [
+      "Try to sleep and wake up at regular times.",
+      "Avoid screens before bedtime.",
+      "Keep your bedroom quiet and comfortable.",
+      "Avoid caffeine late in the day.",
+    ],
   },
   "First Aid": {
-    icon: "🩹",
-    heading: "First Aid & Safety",
-    description: "Learn basic first-aid awareness.",
-    items: ["Minor Cuts", "Burn Awareness", "CPR Awareness", "Emergency Preparedness"],
+    title: "First Aid Guide",
+    description: "Learn basic first-aid steps for common emergencies.",
+    tips: [
+      "For serious emergencies, contact emergency services.",
+      "For bleeding, apply firm pressure with clean material.",
+      "Do not move someone with a suspected serious injury unless necessary for safety.",
+      "Learn CPR and first aid from a certified trainer.",
+    ],
   },
   "Preventive Care": {
-    icon: "❤️",
-    heading: "Preventive Healthcare",
-    description: "Explore preventive healthcare and wellness.",
-    items: ["Regular Checkups", "Vaccination", "Health Screening", "Healthy Habits"],
-  },
-  "Women's Health": {
-    icon: "🌸",
-    heading: "Women's Health",
-    description: "Explore educational information about women's health.",
-    items: ["Menstrual Health", "Reproductive Health", "Hormonal Health", "Women's Wellness"],
+    title: "Preventive Care",
+    description: "Small healthy habits can help protect your health.",
+    tips: [
+      "Schedule regular health checkups.",
+      "Keep vaccinations up to date.",
+      "Maintain good hygiene.",
+      "Stay physically active and eat balanced meals.",
+    ],
   },
 };
-
-const tabs = [
-  "Home",
-  "AI Health Chat",
-  "Symptom Checker",
-  ...Object.keys(pages),
-  "About",
-];
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("Home");
   const [question, setQuestion] = useState("");
-  const [symptoms, setSymptoms] = useState("");
-  const [messages, setMessages] = useState<
-    { role: string; text: string }[]
-  >([]);
+  const [chatAnswer, setChatAnswer] = useState("");
+  const [symptom, setSymptom] = useState("");
+  const [symptomAnswer, setSymptomAnswer] = useState("");
 
-  function sendMessage() {
+  const tabs = [
+    "Home",
+    "AI Health Chat",
+    "Symptom Checker",
+    ...Object.keys(pages),
+    "About",
+  ];
+
+  function askHealthQuestion() {
     if (!question.trim()) return;
-
-    setMessages((prev) => [
-      ...prev,
-      { role: "You", text: question },
-      {
-        role: "HealthGuide AI",
-        text: "Thank you for your question! This is a demo and is not connected to a live AI medical service. Please consult a qualified healthcare professional for personal medical advice.",
-      },
-    ]);
-
-    setQuestion("");
+    setChatAnswer(
+      "Thank you for your question. This is a demo response. For accurate medical advice, please consult a qualified healthcare professional."
+    );
   }
 
-  const styles = `
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      min-height: 100vh;
-      background:
-        linear-gradient(
-          rgba(0, 25, 36, 0.70),
-          rgba(0, 35, 49, 0.82)
-        ),
-        url("/healthcare-bg.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-    }
-
-    button {
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      padding: 18px 5%;
-      background: rgba(0, 25, 38, 0.90);
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid rgba(103,232,249,0.25);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      font-size: 25px;
-      font-weight: 800;
-      color: #67e8f9;
-      white-space: nowrap;
-    }
-
-    .navlinks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      justify-content: center;
-    }
-
-    .navlinks button {
-      border: none;
-      background: transparent;
-      color: #e0f2fe;
-      padding: 9px 10px;
-      border-radius: 8px;
-      font-size: 12px;
-    }
-
-    .navlinks button:hover,
-    .navlinks button.selected {
-      color: #67e8f9;
-      background: rgba(34,211,238,0.18);
-    }
-
-    /* COVER PICTURE */
-    .hero {
-      min-height: 560px;
-      padding: 110px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-
-      background:
-        linear-gradient(
-          rgba(0, 25, 36, 0.48),
-          rgba(0, 25, 36, 0.68)
-        ),
-        url("/cover.jpg");
-
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-
-      border-radius: 0 0 25px 25px;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 11px 20px;
-      border-radius: 30px;
-      background: rgba(34,211,238,0.20);
-      border: 1px solid rgba(103,232,249,0.5);
-      color: #a5f3fc;
-      font-size: 14px;
-    }
-
-    h1 {
-      font-size: clamp(38px, 6vw, 65px);
-      line-height: 1.2;
-      margin: 25px 0;
-      color: white;
-      text-shadow: 0 3px 20px rgba(0,0,0,.5);
-    }
-
-    .hero p {
-      color: #e0f7ff;
-      font-size: 18px;
-      line-height: 1.8;
-    }
-
-    .primary {
-      border: 1px solid rgba(103,232,249,0.4);
-      border-radius: 10px;
-      padding: 13px 22px;
-      background: #0891b2;
-      color: white;
-      font-size: 14px;
-      font-weight: bold;
-      margin: 10px 5px;
-      transition: .2s;
-    }
-
-    .primary:hover {
-      background: #0e7490;
-      transform: translateY(-2px);
-    }
-
-    .section {
-      padding: 65px 7%;
-      max-width: 1250px;
-      margin: auto;
-    }
-
-    .section h2 {
-      text-align: center;
-      font-size: 32px;
-      color: #a5f3fc;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #d1e7ed;
-      margin-bottom: 35px;
-      line-height: 1.7;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 22px;
-    }
-
-    .card {
-      background: rgba(3,35,49,0.86);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(103,232,249,0.25);
-      padding: 27px;
-      border-radius: 18px;
-      box-shadow: 0 8px 30px rgba(0,0,0,.2);
-      transition: .25s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: #67e8f9;
-    }
-
-    .emoji {
-      font-size: 38px;
-    }
-
-    .card h3 {
-      color: #67e8f9;
-    }
-
-    .card p {
-      color: #d0e2e9;
-      line-height: 1.7;
-      font-size: 14px;
-    }
-
-    .panel {
-      max-width: 850px;
-      margin: 30px auto;
-      padding: 30px;
-      background: rgba(3,35,49,0.90);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(103,232,249,.25);
-      border-radius: 18px;
-      box-shadow: 0 10px 35px rgba(0,0,0,.2);
-    }
-
-    .panel h3 {
-      color: #a5f3fc;
-    }
-
-    input, textarea {
-      width: 100%;
-      padding: 15px;
-      margin: 12px 0;
-      border: 1px solid #9bd9e8;
-      border-radius: 9px;
-      background: white;
-      color: #12344a;
-      font-size: 15px;
-    }
-
-    .message {
-      padding: 14px;
-      margin: 12px 0;
-      background: rgba(34,211,238,.12);
-      border: 1px solid rgba(103,232,249,.2);
-      border-radius: 10px;
-      line-height: 1.7;
-    }
-
-    .topic-icon {
-      text-align: center;
-      font-size: 55px;
-    }
-
-    .disclaimer {
-      background: rgba(255,193,7,.12);
-      border: 1px solid rgba(255,193,7,.3);
-      color: #ffe8a3;
-      padding: 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.7;
-      margin-top: 22px;
-    }
-
-    footer {
-      text-align: center;
-      background: rgba(0,18,29,.94);
-      border-top: 1px solid rgba(103,232,249,.2);
-      color: #d1e7ed;
-      padding: 40px 20px;
-      line-height: 1.9;
-    }
-
-    footer h2 {
-      color: #67e8f9;
-    }
-
-    @media(max-width:850px) {
-      .navbar {
-        flex-direction: column;
-      }
-
-      .navlinks {
-        max-height: 120px;
-        overflow-y: auto;
-      }
-    }
-
-    @media(max-width:600px) {
-      .hero {
-        min-height: 480px;
-        padding: 75px 18px;
-      }
-
-      .panel {
-        padding: 20px;
-      }
-
-      .section {
-        padding: 40px 5%;
-      }
-    }
-  `;
+  function checkSymptom() {
+    if (!symptom.trim()) return;
+    setSymptomAnswer(
+      "This tool cannot diagnose medical conditions. Your symptom may have different causes. Please consult a healthcare professional, especially if it is severe, persistent, or getting worse."
+    );
+  }
 
   return (
-    <>
-      <style jsx global>{styles}</style>
+    <main>
+      <header className="navbar">
+        <div className="logo" onClick={() => setActiveTab("Home")}>
+          💚 HealthGuide AI
+        </div>
 
-      <nav className="navbar">
-        <div className="logo">💙 HealthGuide AI</div>
-
-        <div className="navlinks">
+        <nav>
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={activeTab === tab ? "selected" : ""}
+              className={activeTab === tab ? "nav-link active" : "nav-link"}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
             </button>
           ))}
-        </div>
-      </nav>
+        </nav>
+      </header>
 
       {activeTab === "Home" && (
         <>
           <section className="hero">
-            <span className="tag">
-              ✦ Your Personal Health Education Assistant
-            </span>
-
-            <h1>
-              Understand Your Health.
-              <br />
-              Live Better.
-            </h1>
-
-            <p>
-              Explore health information, learn about symptoms
-              <br />
-              and make informed decisions.
-            </p>
-
-            <button
-              className="primary"
-              onClick={() => setActiveTab("AI Health Chat")}
-            >
-              Start Health Chat →
-            </button>
-
-            <button
-              className="primary"
-              onClick={() => setActiveTab("Symptom Checker")}
-            >
-              Check Symptoms →
-            </button>
+            <div className="hero-content">
+              <span className="tag">YOUR PERSONAL HEALTH COMPANION</span>
+              <h1>
+                Your Health,
+                <br />
+                <span>Our Priority.</span>
+              </h1>
+              <p>
+                Explore health information, discover healthy habits, and get
+                guidance for a better lifestyle with HealthGuide AI.
+              </p>
+              <button
+                className="primary-btn"
+                onClick={() => setActiveTab("AI Health Chat")}
+              >
+                Explore Health Tools →
+              </button>
+            </div>
           </section>
 
-          <section className="section">
-            <h2>Explore HealthGuide</h2>
+          <section className="features-section">
+            <div className="section-heading">
+              <span className="tag">EXPLORE OUR SERVICES</span>
+              <h2>Your Health Toolkit</h2>
+              <p>Everything you need to take a step towards healthier living.</p>
+            </div>
 
-            <p className="subtitle">
-              Everything you need to learn about health and wellness.
-            </p>
-
-            <div className="cards">
+            <div className="features-grid">
               {features.map(([icon, title, description]) => (
-                <div className="card" key={title}>
-                  <div className="emoji">{icon}</div>
+                <button
+                  className="feature-card"
+                  key={title}
+                  onClick={() => setActiveTab(title)}
+                >
+                  <span className="feature-icon">{icon}</span>
                   <h3>{title}</h3>
                   <p>{description}</p>
-
-                  <button
-                    className="primary"
-                    onClick={() => setActiveTab(title)}
-                  >
-                    Explore →
-                  </button>
-                </div>
+                  <span className="card-link">Explore →</span>
+                </button>
               ))}
             </div>
           </section>
@@ -470,143 +186,368 @@ export default function Home() {
       )}
 
       {activeTab === "AI Health Chat" && (
-        <section className="section">
-          <h2>💬 AI Health Assistant</h2>
-          <p className="subtitle">
-            Ask general health education questions.
-          </p>
+        <section className="content-section">
+          <span className="tag">AI HEALTH ASSISTANT</span>
+          <h1>Ask Your Health Question</h1>
+          <p>Enter a general health question below.</p>
 
-          <div className="panel">
-            <div className="message">
-              <b>HealthGuide AI:</b> Hello! Welcome to HealthGuide.
-              What would you like to learn about today?
-            </div>
-
-            {messages.map((msg, index) => (
-              <div className="message" key={index}>
-                <b>{msg.role}:</b> {msg.text}
-              </div>
-            ))}
-
-            <input
+          <div className="tool-box">
+            <textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Type your health question..."
-              onKeyDown={(e) => {
-                if (e.key === "Enter") sendMessage();
-              }}
+              placeholder="Type your health question here..."
             />
-
-            <button className="primary" onClick={sendMessage}>
-              Send Message →
+            <button className="primary-btn" onClick={askHealthQuestion}>
+              Ask Question
             </button>
-
-            <div className="disclaimer">
-              This is a demonstration, not a live AI medical service.
-            </div>
+            {chatAnswer && <div className="answer-box">{chatAnswer}</div>}
           </div>
         </section>
       )}
 
       {activeTab === "Symptom Checker" && (
-        <section className="section">
-          <h2>🩺 Symptom Information</h2>
-          <p className="subtitle">
-            Describe what you are experiencing.
-          </p>
+        <section className="content-section">
+          <span className="tag">SYMPTOM INFORMATION</span>
+          <h1>Symptom Checker</h1>
+          <p>Describe what you are experiencing.</p>
 
-          <div className="panel">
-            <h3>Describe your symptoms</h3>
-
+          <div className="tool-box">
             <textarea
-              rows={5}
-              value={symptoms}
-              onChange={(e) => setSymptoms(e.target.value)}
-              placeholder="Example: headache, cough, fever..."
+              value={symptom}
+              onChange={(e) => setSymptom(e.target.value)}
+              placeholder="Describe your symptoms..."
             />
-
-            <button
-              className="primary"
-              onClick={() =>
-                alert(
-                  symptoms.trim()
-                    ? "This demonstration does not diagnose or analyze symptoms. Please consult a healthcare professional."
-                    : "Please describe your symptoms first."
-                )
-              }
-            >
-              Submit Symptoms
+            <button className="primary-btn" onClick={checkSymptom}>
+              Check Symptoms
             </button>
-
-            <div className="disclaimer">
-              This tool does not diagnose diseases.
-              Seek urgent medical care for severe symptoms.
-            </div>
+            {symptomAnswer && (
+              <div className="answer-box">{symptomAnswer}</div>
+            )}
           </div>
         </section>
       )}
 
       {pages[activeTab] && (
-        <section className="section">
-          <div className="panel">
-            <div className="topic-icon">
-              {pages[activeTab].icon}
-            </div>
+        <section className="content-section">
+          <span className="tag">HEALTH INFORMATION</span>
+          <h1>{pages[activeTab].title}</h1>
+          <p>{pages[activeTab].description}</p>
 
-            <h2>{pages[activeTab].heading}</h2>
-
-            <p className="subtitle">
-              {pages[activeTab].description}
-            </p>
-
-            <div className="cards">
-              {pages[activeTab].items.map((item) => (
-                <div className="card" key={item}>
-                  <h3>{item}</h3>
-                  <p>
-                    Learn general educational information
-                    about {item.toLowerCase()}.
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="disclaimer">
-              Educational information only. Always consult
-              a qualified healthcare professional for personal advice.
-            </div>
+          <div className="tips-grid">
+            {pages[activeTab].tips.map((tip, index) => (
+              <div className="tip-card" key={index}>
+                <span>✓</span>
+                {tip}
+              </div>
+            ))}
           </div>
         </section>
       )}
 
       {activeTab === "About" && (
-        <section className="section">
-          <div className="panel">
-            <div className="topic-icon">💙</div>
-            <h2>About HealthGuide AI</h2>
-
-            <p className="subtitle">
-              Understand Your Health. Make Informed Decisions.
-            </p>
-
-            <p>
-              HealthGuide AI is an educational health platform
-              designed to make general health information easier
-              to understand and access.
-            </p>
-          </div>
+        <section className="content-section">
+          <span className="tag">ABOUT US</span>
+          <h1>About HealthGuide AI</h1>
+          <p>
+            HealthGuide AI is a health information platform designed to make
+            general health education easier to explore and understand.
+          </p>
+          <p>
+            Our goal is to encourage healthy habits and help people find
+            useful general health information.
+          </p>
         </section>
       )}
 
       <footer>
-        <h2>💙 HealthGuide AI</h2>
-        <p>Understand Your Health. Make Informed Decisions.</p>
+        <h2>💚 HealthGuide AI</h2>
+        <p>Making health information easier for everyone.</p>
+        <p className="disclaimer">
+          Disclaimer: This website provides general educational information
+          only. It does not provide medical diagnosis or replace professional
+          medical advice.
+        </p>
         <p>© 2026 HealthGuide AI. All rights reserved.</p>
-        <small>
-          Educational information only. Not a doctor,
-          diagnostic tool, or emergency service.
-        </small>
       </footer>
-    </>
+
+      <style jsx global>{`
+        * {
+          box-sizing: border-box;
+        }
+
+        body {
+          margin: 0;
+          font-family: Arial, sans-serif;
+          color: #173b36;
+          background:
+            linear-gradient(rgba(239, 250, 246, 0.92), rgba(239, 250, 246, 0.96)),
+            url("/healthcare-bg.jpg") center / cover fixed;
+        }
+
+        button {
+          font-family: inherit;
+        }
+
+        .navbar {
+          min-height: 76px;
+          padding: 16px 5%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 20px;
+          flex-wrap: wrap;
+          background: rgba(255, 255, 255, 0.94);
+          box-shadow: 0 3px 18px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+          font-size: 23px;
+          font-weight: 800;
+          color: #087e68;
+          cursor: pointer;
+        }
+
+        nav {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 7px;
+        }
+
+        .nav-link {
+          border: 0;
+          background: transparent;
+          padding: 9px 12px;
+          border-radius: 20px;
+          color: #315b53;
+          cursor: pointer;
+          font-size: 13px;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+          background: #d9f3e9;
+          color: #087e68;
+        }
+
+        .hero {
+          min-height: 490px;
+          padding: 90px 8%;
+          display: flex;
+          align-items: center;
+          background:
+            linear-gradient(90deg, rgba(4, 48, 39, 0.86), rgba(4, 48, 39, 0.2)),
+            url("/cover.jpg") center / cover;
+          color: white;
+        }
+
+        .hero-content {
+          max-width: 650px;
+        }
+
+        .tag {
+          color: #18a58a;
+          font-size: 12px;
+          font-weight: 800;
+          letter-spacing: 2px;
+        }
+
+        .hero .tag {
+          color: #a7f1d9;
+        }
+
+        .hero h1 {
+          font-size: clamp(42px, 7vw, 72px);
+          line-height: 1.08;
+          margin: 20px 0;
+        }
+
+        .hero h1 span {
+          color: #8ce6c7;
+        }
+
+        .hero p {
+          max-width: 530px;
+          font-size: 17px;
+          line-height: 1.8;
+          color: #e2f4ed;
+        }
+
+        .primary-btn {
+          border: 0;
+          border-radius: 30px;
+          padding: 14px 24px;
+          background: #0b9b7d;
+          color: white;
+          font-weight: 700;
+          cursor: pointer;
+          margin-top: 15px;
+        }
+
+        .primary-btn:hover {
+          background: #087e68;
+        }
+
+        .features-section {
+          padding: 75px 7%;
+        }
+
+        .section-heading {
+          text-align: center;
+          margin-bottom: 40px;
+        }
+
+        .section-heading h2 {
+          font-size: 36px;
+          margin: 12px 0;
+        }
+
+        .section-heading p,
+        .content-section > p {
+          color: #607c75;
+          line-height: 1.7;
+        }
+
+        .features-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 22px;
+        }
+
+        .feature-card {
+          text-align: left;
+          padding: 27px;
+          border: 1px solid #e0eee8;
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.94);
+          cursor: pointer;
+          transition: 0.2s;
+          color: #173b36;
+        }
+
+        .feature-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 12px 30px rgba(15, 110, 85, 0.12);
+        }
+
+        .feature-icon {
+          font-size: 34px;
+        }
+
+        .feature-card h3 {
+          font-size: 19px;
+          margin-bottom: 8px;
+        }
+
+        .feature-card p {
+          color: #668078;
+          line-height: 1.6;
+        }
+
+        .card-link {
+          color: #07896f;
+          font-weight: 700;
+        }
+
+        .content-section {
+          max-width: 1000px;
+          min-height: 500px;
+          margin: auto;
+          padding: 85px 7%;
+          text-align: center;
+        }
+
+        .content-section h1 {
+          font-size: clamp(32px, 5vw, 48px);
+          margin: 15px 0;
+        }
+
+        .tool-box {
+          max-width: 650px;
+          margin: 35px auto;
+          padding: 28px;
+          background: white;
+          border-radius: 18px;
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        textarea {
+          width: 100%;
+          min-height: 130px;
+          padding: 15px;
+          border: 1px solid #cde3d9;
+          border-radius: 12px;
+          resize: vertical;
+          font: inherit;
+        }
+
+        .answer-box {
+          margin-top: 20px;
+          padding: 18px;
+          border-radius: 12px;
+          background: #e8f8f1;
+          line-height: 1.7;
+          text-align: left;
+        }
+
+        .tips-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 18px;
+          margin-top: 35px;
+        }
+
+        .tip-card {
+          display: flex;
+          gap: 12px;
+          align-items: flex-start;
+          padding: 22px;
+          background: white;
+          border-radius: 14px;
+          text-align: left;
+          line-height: 1.6;
+        }
+
+        .tip-card span {
+          color: #0b9b7d;
+          font-weight: 900;
+        }
+
+        footer {
+          padding: 40px 7%;
+          background: #103d35;
+          color: white;
+          text-align: center;
+        }
+
+        footer p {
+          color: #c8e5dc;
+          line-height: 1.6;
+        }
+
+        .disclaimer {
+          max-width: 700px;
+          margin: 20px auto;
+          font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+          .navbar {
+            justify-content: center;
+          }
+
+          nav {
+            justify-content: center;
+          }
+
+          .hero {
+            padding: 70px 7%;
+          }
+
+          .hero h1 {
+            font-size: 45px;
+          }
+        }
+      `}</style>
+    </main>
   );
 }
